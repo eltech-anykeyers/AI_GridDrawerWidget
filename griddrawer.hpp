@@ -18,6 +18,8 @@ public:
     void refresh();
     QString getMark() const;
     void setMark( const QString& mark );
+    QSize getSize() const;
+    void setSize( const QSize& size );
 
 protected:
     std::optional< QPoint > getClickPoint( const QPointF& pos ) const;
@@ -27,7 +29,11 @@ protected:
     virtual void mouseReleaseEvent( QMouseEvent* event ) override;
     virtual void mouseMoveEvent( QMouseEvent* event ) override;
 
+    virtual QSize minimumSizeHint() const override;
+
 private:
+    static const QSize cellMinimumSize;
+
     QString mark;
     QImage* image;
     std::optional< QPoint > prevPoint;

@@ -5,6 +5,8 @@
 #include <QPen>
 #include <QtMath>
 
+const QSize GridDrawer::cellMinimumSize = QSize( 30, 30 );
+
 GridDrawer::GridDrawer( const QSize& size, QWidget* parent )
     : QWidget( parent )
 {
@@ -37,6 +39,7 @@ GridDrawer::~GridDrawer()
 void GridDrawer::refresh()
 {
     if( image ) image->fill( 1 );
+    this->repaint();
 }
 
 QString GridDrawer::getMark() const
@@ -47,6 +50,22 @@ QString GridDrawer::getMark() const
 void GridDrawer::setMark( const QString& mark )
 {
     this->mark = mark;
+}
+
+QSize GridDrawer::getSize() const
+{
+    if( !image ) return QSize( 0, 0 );
+    return image->size();
+}
+
+void GridDrawer::setSize( const QSize& size )
+{
+    if( image ) delete image;
+
+    image = new QImage( size, QImage::Format::Format_Mono );
+    prevPoint = std::nullopt;
+
+    this->refresh();
 }
 
 std::optional< QPoint > GridDrawer::getClickPoint( const QPointF& pos ) const
@@ -157,4 +176,12 @@ void GridDrawer::mouseMoveEvent( QMouseEvent* event )
     }
 
     QWidget::mouseMoveEvent( event );
+}
+
+QSize GridDrawer::minimumSizeHint() const
+{
+    if( !image ) return cellMinimumSize;
+
+    return QSize( cellMinimumSize.width() * image->width(),
+                  cellMinimumSize.height() * image->height() );
 }
