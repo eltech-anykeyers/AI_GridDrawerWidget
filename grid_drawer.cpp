@@ -1,4 +1,4 @@
-#include "griddrawer.hpp"
+#include "grid_drawer.hpp"
 
 #include <QMouseEvent>
 #include <QPainter>
@@ -66,6 +66,21 @@ void GridDrawer::setSize( const QSize& size )
     prevPoint = std::nullopt;
 
     this->refresh();
+}
+
+QVector< QColor > GridDrawer::getPixelData() const
+{
+    if( !image ) return QVector< QColor >();
+
+    QVector< QColor > result;
+    for( int i = 0; i < image->width(); i++ )
+    {
+        for( int j = 0; j < image->height(); j++ )
+        {
+            result.append( image->pixelColor( i, j ) );
+        }
+    }
+    return result;
 }
 
 std::optional< QPoint > GridDrawer::getClickPoint( const QPointF& pos ) const
