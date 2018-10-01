@@ -50,6 +50,7 @@ QString GridDrawer::getMark() const
 void GridDrawer::setMark( const QString& mark )
 {
     this->mark = mark;
+    emit markIsChanged( mark );
 }
 
 QSize GridDrawer::getSize() const

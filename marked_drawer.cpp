@@ -7,6 +7,10 @@ MarkedDrawer::MarkedDrawer( const QSize& size, QWidget* parent )
 {
     gridDrawer = new GridDrawer( size );
     markLineEdit = new QLineEdit();
+    connect( markLineEdit, &QLineEdit::textChanged,
+             this, &MarkedDrawer::setMark );
+    connect( gridDrawer, &GridDrawer::markIsChanged,
+             this, &MarkedDrawer::markIsChanged );
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     mainLayout->addWidget( gridDrawer );
@@ -30,6 +34,7 @@ QString MarkedDrawer::getMark() const
 void MarkedDrawer::setMark( const QString& mark )
 {
     gridDrawer->setMark( mark );
+    markLineEdit->setText( mark );
 }
 
 QSize MarkedDrawer::getSize() const

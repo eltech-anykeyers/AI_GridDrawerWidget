@@ -17,10 +17,15 @@ public:
 
     void refresh();
     QString getMark() const;
-    void setMark( const QString& mark );
     QSize getSize() const;
     void setSize( const QSize& size );
     QVector< QColor > getPixelData() const;
+
+public slots:
+    void setMark( const QString& mark );
+
+signals:
+    void markIsChanged( const QString& newMark );
 
 protected:
     std::optional< QPoint > getClickPoint( const QPointF& pos ) const;
