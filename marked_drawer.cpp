@@ -39,14 +39,29 @@ MarkedDrawer::MarkedDrawer(
     this->setLayout( mainLayout );
 }
 
-void MarkedDrawer::refresh()
-{
-    gridDrawer->refresh();
-}
-
 QString MarkedDrawer::getMark() const
 {
     return gridDrawer->getMark();
+}
+
+QSize MarkedDrawer::getSize() const
+{
+    return gridDrawer->getSize();
+}
+
+QVector< QColor > MarkedDrawer::getPixelData() const
+{
+    return gridDrawer->getPixelData();
+}
+
+const QImage& MarkedDrawer::getImage() const
+{
+    return gridDrawer->getImage();
+}
+
+void MarkedDrawer::refresh()
+{
+    gridDrawer->refresh();
 }
 
 void MarkedDrawer::setMark( const QString& mark )
@@ -55,17 +70,7 @@ void MarkedDrawer::setMark( const QString& mark )
     markLineEdit->setText( mark );
 }
 
-QSize MarkedDrawer::getSize() const
-{
-    return gridDrawer->getSize();
-}
-
 void MarkedDrawer::setSize( const QSize& size )
 {
     gridDrawer->setSize( size );
-}
-
-QVector< QColor > MarkedDrawer::getPixelData() const
-{
-    return gridDrawer->getPixelData();
 }

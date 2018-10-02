@@ -16,14 +16,18 @@ public:
     MarkedDrawer( const MarkedDrawer& other );
     MarkedDrawer( MarkedDrawer&& other );
 
-    void refresh();
+    MarkedDrawer& operator=( const MarkedDrawer& other ) = delete;
+    MarkedDrawer& operator=( MarkedDrawer&& other ) = delete;
+
     QString getMark() const;
     QSize getSize() const;
-    void setSize( const QSize& size );
     QVector< QColor > getPixelData() const;
+    const QImage& getImage() const;
 
 public slots:
+    void refresh();
     void setMark( const QString& mark );
+    void setSize( const QSize& size );
 
 signals:
     void markIsChanged( const QString& newMark );

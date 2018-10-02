@@ -16,8 +16,8 @@ public:
     GridDrawer( GridDrawer&& other );
     virtual ~GridDrawer() override;
 
-    GridDrawer& operator=( const GridDrawer& );
-    GridDrawer& operator=( GridDrawer&& );
+    GridDrawer& operator=( const GridDrawer& ) = delete;
+    GridDrawer& operator=( GridDrawer&& ) = delete;
 
     QString getMark() const;
     QSize getSize() const;

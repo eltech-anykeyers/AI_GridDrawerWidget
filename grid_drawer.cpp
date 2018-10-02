@@ -29,20 +29,6 @@ GridDrawer::GridDrawer( GridDrawer&& other )
     mark = std::move( other.mark );
 }
 
-GridDrawer& GridDrawer::operator=( const GridDrawer& other )
-{
-    image = new QImage( other.image->copy() );
-    return *this;
-}
-
-GridDrawer& GridDrawer::operator=( GridDrawer&& other )
-{
-    image = other.image;
-    other.image = Q_NULLPTR;
-    mark = std::move( other.mark );
-    return *this;
-}
-
 GridDrawer::~GridDrawer()
 {
     if( image )
