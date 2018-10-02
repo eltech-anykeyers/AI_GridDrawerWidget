@@ -31,6 +31,8 @@ MarkedDrawer::MarkedDrawer(
              this, &MarkedDrawer::setMark );
     connect( this->gridDrawer, &GridDrawer::markIsChanged,
              this, &MarkedDrawer::markIsChanged );
+    connect( this->gridDrawer, &GridDrawer::imageUpdated,
+             this, &MarkedDrawer::imageUpdated );
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
     mainLayout->addWidget( this->gridDrawer );

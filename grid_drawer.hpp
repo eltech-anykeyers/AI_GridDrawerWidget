@@ -36,6 +36,7 @@ public slots:
     void setSize( const QSize& size );
 
 signals:
+    void imageUpdated( const QImage& image );
     void markIsChanged( const QString& newMark );
 
 protected:

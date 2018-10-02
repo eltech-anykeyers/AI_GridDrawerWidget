@@ -14,6 +14,7 @@ GridDrawer::GridDrawer(
     image = std::make_shared< QImage >( size, QImage::Format::Format_Mono );
     image->fill( 1 );
     this->gridIsEnabled = enableGrid;
+    emit imageUpdated( *image );
 }
 
 GridDrawer::GridDrawer( const GridDrawer& other )
@@ -22,6 +23,7 @@ GridDrawer::GridDrawer( const GridDrawer& other )
     image = std::make_shared< QImage >( other.image->copy() );
     mark = other.mark;
     gridIsEnabled = other.gridIsEnabled;
+    emit imageUpdated( *image );
 }
 
 GridDrawer::GridDrawer( GridDrawer&& other )
@@ -30,6 +32,7 @@ GridDrawer::GridDrawer( GridDrawer&& other )
     image = std::move( other.image );
     mark = std::move( other.mark );
     gridIsEnabled = other.gridIsEnabled;
+    emit imageUpdated( *image );
 }
 
 GridDrawer::~GridDrawer()
@@ -94,6 +97,7 @@ void GridDrawer::refresh()
 {
     if( image ) image->fill( 1 );
     this->repaint();
+    emit imageUpdated( *image );
 }
 
 void GridDrawer::setMark( const QString& mark )
@@ -174,6 +178,7 @@ void GridDrawer::mousePressEvent( QMouseEvent* event )
         }
         prevPoint = currentPoint;
         this->repaint();
+        emit imageUpdated( *image );
     }
     QWidget::mousePressEvent( event );
 }
@@ -193,6 +198,7 @@ void GridDrawer::mouseReleaseEvent( QMouseEvent* event )
         }
         prevPoint = std::nullopt;
         this->repaint();
+        emit imageUpdated( *image );
     }
 
     QWidget::mouseReleaseEvent( event );
@@ -220,6 +226,7 @@ void GridDrawer::mouseMoveEvent( QMouseEvent* event )
         prevPoint = currentPoint;
 
         this->repaint();
+        emit imageUpdated( *image );
     }
 
     QWidget::mouseMoveEvent( event );
