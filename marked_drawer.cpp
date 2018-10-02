@@ -3,18 +3,36 @@
 #include <QVBoxLayout>
 
 MarkedDrawer::MarkedDrawer( const QSize& size, QWidget* parent )
-    : QWidget ( parent )
+    : MarkedDrawer( new GridDrawer( size ), new QLineEdit(), parent )
+{}
+
+MarkedDrawer::MarkedDrawer( const MarkedDrawer& other )
+    : MarkedDrawer( new GridDrawer( *other.gridDrawer ),
+                    new QLineEdit( other.markLineEdit->text() ) )
+{}
+
+MarkedDrawer::MarkedDrawer( MarkedDrawer&& other )
+    : MarkedDrawer( other.gridDrawer, other.markLineEdit )
 {
-    gridDrawer = new GridDrawer( size );
-    markLineEdit = new QLineEdit();
-    connect( markLineEdit, &QLineEdit::textChanged,
+    other.gridDrawer = Q_NULLPTR;
+    other.markLineEdit = Q_NULLPTR;
+}
+
+MarkedDrawer::MarkedDrawer(
+    GridDrawer* gridDrawer, QLineEdit* markLineEdit, QWidget* parent)
+    : QWidget( parent )
+{
+    this->gridDrawer = gridDrawer;
+    this->markLineEdit = markLineEdit;
+
+    connect( this->markLineEdit, &QLineEdit::textChanged,
              this, &MarkedDrawer::setMark );
-    connect( gridDrawer, &GridDrawer::markIsChanged,
+    connect( this->gridDrawer, &GridDrawer::markIsChanged,
              this, &MarkedDrawer::markIsChanged );
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
-    mainLayout->addWidget( gridDrawer );
-    mainLayout->addWidget( markLineEdit );
+    mainLayout->addWidget( this->gridDrawer );
+    mainLayout->addWidget( this->markLineEdit );
     mainLayout->setSpacing( 0 );
     mainLayout->setMargin( 0 );
 

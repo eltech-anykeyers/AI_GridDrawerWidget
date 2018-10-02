@@ -11,9 +11,10 @@ class MarkedDrawer : public QWidget
     Q_OBJECT
 
 public:
+    MarkedDrawer() = delete;
     explicit MarkedDrawer( const QSize& size, QWidget* parent = Q_NULLPTR );
-    MarkedDrawer( const MarkedDrawer& other ) = default;
-    MarkedDrawer( MarkedDrawer&& other ) = default;
+    MarkedDrawer( const MarkedDrawer& other );
+    MarkedDrawer( MarkedDrawer&& other );
 
     void refresh();
     QString getMark() const;
@@ -26,6 +27,11 @@ public slots:
 
 signals:
     void markIsChanged( const QString& newMark );
+
+protected:
+    MarkedDrawer(
+        GridDrawer* gridDrawer, QLineEdit* markLineEdit,
+        QWidget* parent = Q_NULLPTR );
 
 private:
     GridDrawer* gridDrawer;

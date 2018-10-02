@@ -18,6 +18,7 @@ GridDrawer::GridDrawer( const GridDrawer& other )
     : QWidget( Q_NULLPTR )
 {
     image = new QImage( other.image->copy() );
+    mark = other.mark;
 }
 
 GridDrawer::GridDrawer( GridDrawer&& other )
@@ -25,6 +26,21 @@ GridDrawer::GridDrawer( GridDrawer&& other )
 {
     image = other.image;
     other.image = Q_NULLPTR;
+    mark = std::move( other.mark );
+}
+
+GridDrawer& GridDrawer::operator=( const GridDrawer& other )
+{
+    image = new QImage( other.image->copy() );
+    return *this;
+}
+
+GridDrawer& GridDrawer::operator=( GridDrawer&& other )
+{
+    image = other.image;
+    other.image = Q_NULLPTR;
+    mark = std::move( other.mark );
+    return *this;
 }
 
 GridDrawer::~GridDrawer()
@@ -36,37 +52,15 @@ GridDrawer::~GridDrawer()
     }
 }
 
-void GridDrawer::refresh()
-{
-    if( image ) image->fill( 1 );
-    this->repaint();
-}
-
 QString GridDrawer::getMark() const
 {
     return mark;
-}
-
-void GridDrawer::setMark( const QString& mark )
-{
-    this->mark = mark;
-    emit markIsChanged( mark );
 }
 
 QSize GridDrawer::getSize() const
 {
     if( !image ) return QSize( 0, 0 );
     return image->size();
-}
-
-void GridDrawer::setSize( const QSize& size )
-{
-    if( image ) delete image;
-
-    image = new QImage( size, QImage::Format::Format_Mono );
-    prevPoint = std::nullopt;
-
-    this->refresh();
 }
 
 QVector< QColor > GridDrawer::getPixelData() const
@@ -82,6 +76,33 @@ QVector< QColor > GridDrawer::getPixelData() const
         }
     }
     return result;
+}
+
+const QImage& GridDrawer::getImage() const
+{
+    return *image;
+}
+
+void GridDrawer::refresh()
+{
+    if( image ) image->fill( 1 );
+    this->repaint();
+}
+
+void GridDrawer::setMark( const QString& mark )
+{
+    this->mark = mark;
+    emit markIsChanged( mark );
+}
+
+void GridDrawer::setSize( const QSize& size )
+{
+    if( image ) delete image;
+
+    image = new QImage( size, QImage::Format::Format_Mono );
+    prevPoint = std::nullopt;
+
+    this->refresh();
 }
 
 std::optional< QPoint > GridDrawer::getClickPoint( const QPointF& pos ) const
