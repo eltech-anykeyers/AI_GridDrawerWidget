@@ -59,6 +59,11 @@ const QImage& MarkedDrawer::getImage() const
     return gridDrawer->getImage();
 }
 
+std::shared_ptr< QImage > MarkedDrawer::getImagePtr() const
+{
+    return gridDrawer->getImagePtr();
+}
+
 void MarkedDrawer::refresh()
 {
     gridDrawer->refresh();

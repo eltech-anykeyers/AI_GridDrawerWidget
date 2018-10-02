@@ -23,6 +23,7 @@ public:
     QSize getSize() const;
     QVector< QColor > getPixelData() const;
     const QImage& getImage() const;
+    std::shared_ptr< QImage > getImagePtr() const;
 
 public slots:
     void refresh();
