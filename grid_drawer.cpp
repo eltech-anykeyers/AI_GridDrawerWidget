@@ -7,11 +7,13 @@
 
 const QSize GridDrawer::cellMinimumSize = QSize( 30, 30 );
 
-GridDrawer::GridDrawer( const QSize& size, QWidget* parent )
+GridDrawer::GridDrawer(
+    const QSize& size, bool enableGrid, QWidget* parent )
     : QWidget( parent )
 {
     image = std::make_shared< QImage >( size, QImage::Format::Format_Mono );
     image->fill( 1 );
+    this->gridIsEnabled = enableGrid;
 }
 
 GridDrawer::GridDrawer( const GridDrawer& other )
@@ -19,6 +21,7 @@ GridDrawer::GridDrawer( const GridDrawer& other )
 {
     image = std::make_shared< QImage >( other.image->copy() );
     mark = other.mark;
+    gridIsEnabled = other.gridIsEnabled;
 }
 
 GridDrawer::GridDrawer( GridDrawer&& other )
@@ -26,6 +29,7 @@ GridDrawer::GridDrawer( GridDrawer&& other )
 {
     image = std::move( other.image );
     mark = std::move( other.mark );
+    gridIsEnabled = other.gridIsEnabled;
 }
 
 GridDrawer::~GridDrawer()
@@ -70,6 +74,20 @@ const QImage& GridDrawer::getImage() const
 std::shared_ptr< QImage > GridDrawer::getImagePtr() const
 {
     return image;
+}
+
+bool GridDrawer::isGridEnabled() const
+{
+    return gridIsEnabled;
+}
+
+void GridDrawer::enableGrid( bool enable )
+{
+    if( gridIsEnabled != enable )
+    {
+        gridIsEnabled = enable;
+        this->repaint();
+    }
 }
 
 void GridDrawer::refresh()
@@ -125,16 +143,19 @@ void GridDrawer::paintEvent( QPaintEvent* /* event */ )
     painter.drawImage( QPoint( 0, 0), *image );
 
     /// Draw grid.
-    painter.setPen(
-        QPen( Qt::GlobalColor::black, 0.0,
-              Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin ) );
-    for( int x = 1; x < image->width(); x++ )
+    if( gridIsEnabled )
     {
-        painter.drawLine( QLine( x, 0, x, image->height() ) );
-    }
-    for( int y = 1; y < image->height(); y++ )
-    {
-        painter.drawLine( QLine( 0, y, image->width(), y ) );
+        painter.setPen(
+            QPen( Qt::GlobalColor::black, 0.0,
+                  Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin ) );
+        for( int x = 1; x < image->width(); x++ )
+        {
+            painter.drawLine( QLine( x, 0, x, image->height() ) );
+        }
+        for( int y = 1; y < image->height(); y++ )
+        {
+            painter.drawLine( QLine( 0, y, image->width(), y ) );
+        }
     }
 }
 

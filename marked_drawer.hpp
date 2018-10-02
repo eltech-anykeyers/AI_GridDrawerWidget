@@ -12,7 +12,9 @@ class MarkedDrawer : public QWidget
 
 public:
     MarkedDrawer() = delete;
-    explicit MarkedDrawer( const QSize& size, QWidget* parent = Q_NULLPTR );
+    explicit MarkedDrawer(
+            const QSize& size, bool enableGrid = true,
+            QWidget* parent = Q_NULLPTR );
     MarkedDrawer( const MarkedDrawer& other );
     MarkedDrawer( MarkedDrawer&& other );
 
@@ -24,8 +26,10 @@ public:
     QVector< QColor > getPixelData() const;
     const QImage& getImage() const;
     std::shared_ptr< QImage > getImagePtr() const;
+    bool isGridEnabled() const;
 
 public slots:
+    void enableGrid( bool enable );
     void refresh();
     void setMark( const QString& mark );
     void setSize( const QSize& size );

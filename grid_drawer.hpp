@@ -12,7 +12,9 @@ class GridDrawer : public QWidget
 
 public:
     GridDrawer() = delete;
-    explicit GridDrawer( const QSize& size, QWidget* parent = Q_NULLPTR );
+    explicit GridDrawer(
+        const QSize& size, bool enableGrid = true,
+        QWidget* parent = Q_NULLPTR );
     GridDrawer( const GridDrawer& other );
     GridDrawer( GridDrawer&& other );
     virtual ~GridDrawer() override;
@@ -25,8 +27,10 @@ public:
     QVector< QColor > getPixelData() const;
     const QImage& getImage() const;
     std::shared_ptr< QImage > getImagePtr() const;
+    bool isGridEnabled() const;
 
 public slots:
+    void enableGrid( bool enable );
     void refresh();
     void setMark( const QString& mark );
     void setSize( const QSize& size );
@@ -50,6 +54,7 @@ private:
     QString mark;
     std::shared_ptr< QImage > image;
     std::optional< QPoint > prevPoint;
+    bool gridIsEnabled;
 };
 
 #endif /// GRIDDRAWER_HPP

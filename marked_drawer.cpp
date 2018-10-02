@@ -2,8 +2,10 @@
 
 #include <QVBoxLayout>
 
-MarkedDrawer::MarkedDrawer( const QSize& size, QWidget* parent )
-    : MarkedDrawer( new GridDrawer( size ), new QLineEdit(), parent )
+MarkedDrawer::MarkedDrawer(
+    const QSize& size, bool enableGrid, QWidget* parent )
+    : MarkedDrawer( new GridDrawer( size, enableGrid ),
+                    new QLineEdit(), parent )
 {}
 
 MarkedDrawer::MarkedDrawer( const MarkedDrawer& other )
@@ -62,6 +64,16 @@ const QImage& MarkedDrawer::getImage() const
 std::shared_ptr< QImage > MarkedDrawer::getImagePtr() const
 {
     return gridDrawer->getImagePtr();
+}
+
+bool MarkedDrawer::isGridEnabled() const
+{
+    return gridDrawer->isGridEnabled();
+}
+
+void MarkedDrawer::enableGrid( bool enable )
+{
+    gridDrawer->enableGrid( enable );
 }
 
 void MarkedDrawer::refresh()
