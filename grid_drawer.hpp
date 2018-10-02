@@ -2,6 +2,7 @@
 #define GRIDDRAWER_HPP
 
 #include <optional>
+#include <memory>
 
 #include <QWidget>
 
@@ -23,6 +24,7 @@ public:
     QSize getSize() const;
     QVector< QColor > getPixelData() const;
     const QImage& getImage() const;
+    std::shared_ptr< QImage > getImagePtr() const;
 
 public slots:
     void refresh();
@@ -46,7 +48,7 @@ private:
     static const QSize cellMinimumSize;
 
     QString mark;
-    QImage* image;
+    std::shared_ptr< QImage > image;
     std::optional< QPoint > prevPoint;
 };
 

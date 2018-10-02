@@ -10,22 +10,21 @@ const QSize GridDrawer::cellMinimumSize = QSize( 30, 30 );
 GridDrawer::GridDrawer( const QSize& size, QWidget* parent )
     : QWidget( parent )
 {
-    image = new QImage( size, QImage::Format::Format_Mono );
+    image = std::make_shared< QImage >( size, QImage::Format::Format_Mono );
     image->fill( 1 );
 }
 
 GridDrawer::GridDrawer( const GridDrawer& other )
     : QWidget( Q_NULLPTR )
 {
-    image = new QImage( other.image->copy() );
+    image = std::make_shared< QImage >( other.image->copy() );
     mark = other.mark;
 }
 
 GridDrawer::GridDrawer( GridDrawer&& other )
     : QWidget( Q_NULLPTR )
 {
-    image = other.image;
-    other.image = Q_NULLPTR;
+    image = std::move( other.image );
     mark = std::move( other.mark );
 }
 
@@ -33,7 +32,6 @@ GridDrawer::~GridDrawer()
 {
     if( image )
     {
-        delete image;
         image = nullptr;
     }
 }
@@ -69,6 +67,11 @@ const QImage& GridDrawer::getImage() const
     return *image;
 }
 
+std::shared_ptr< QImage > GridDrawer::getImagePtr() const
+{
+    return image;
+}
+
 void GridDrawer::refresh()
 {
     if( image ) image->fill( 1 );
@@ -83,9 +86,9 @@ void GridDrawer::setMark( const QString& mark )
 
 void GridDrawer::setSize( const QSize& size )
 {
-    if( image ) delete image;
+    if( image ) image = nullptr;
 
-    image = new QImage( size, QImage::Format::Format_Mono );
+    image = std::make_shared< QImage >( size, QImage::Format::Format_Mono );
     prevPoint = std::nullopt;
 
     this->refresh();
@@ -181,7 +184,7 @@ void GridDrawer::mouseMoveEvent( QMouseEvent* event )
         event->buttons() & ( Qt::MouseButton::LeftButton |
                              Qt::MouseButton::RightButton ) )
     {
-        QPainter painter( image );
+        QPainter painter( image.get() );
         painter.setPen( event->buttons() == Qt::MouseButton::LeftButton ?
                         Qt::GlobalColor::black : Qt::GlobalColor::white );
 
