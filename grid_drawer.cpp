@@ -4,8 +4,11 @@
 #include <QPainter>
 #include <QPen>
 #include <QtMath>
+#include <QDateTime>
 
 const QSize GridDrawer::cellMinimumSize = QSize( 30, 30 );
+QRandomGenerator GridDrawer::rndGenerator =
+    QRandomGenerator( static_cast< quint32 >( QDateTime::currentSecsSinceEpoch() ) );
 
 GridDrawer::GridDrawer(
     const QSize& size, bool enableGrid, QWidget* parent )
@@ -13,7 +16,8 @@ GridDrawer::GridDrawer(
 {
     image = std::make_shared< QImage >( size, QImage::Format::Format_Mono );
     image->fill( 1 );
-    this->gridIsEnabled = enableGrid;
+    gridIsEnabled = enableGrid;
+    enabled = true;
     emit imageUpdated( *image );
 }
 
@@ -23,6 +27,7 @@ GridDrawer::GridDrawer( const GridDrawer& other )
     image = std::make_shared< QImage >( other.image->copy() );
     mark = other.mark;
     gridIsEnabled = other.gridIsEnabled;
+    enabled = other.enabled;
     emit imageUpdated( *image );
 }
 
@@ -32,6 +37,7 @@ GridDrawer::GridDrawer( GridDrawer&& other )
     image = std::move( other.image );
     mark = std::move( other.mark );
     gridIsEnabled = other.gridIsEnabled;
+    enabled = other.enabled;
     emit imageUpdated( *image );
 }
 
@@ -84,6 +90,30 @@ bool GridDrawer::isGridEnabled() const
     return gridIsEnabled;
 }
 
+bool GridDrawer::isEnabled() const
+{
+    return enabled;
+}
+
+void GridDrawer::generate()
+{
+    if( !image || !enabled ) return;
+    for( int i = 0; i < image->width(); i++ )
+    {
+        for( int j = 0; j < image->height(); j++ )
+        {
+            this->setRandom( QPoint( i, j ) );
+        }
+    }
+    this->repaint();
+    emit imageUpdated( *image );
+}
+
+void GridDrawer::setEnabled( bool enable )
+{
+    enabled = enable;
+}
+
 void GridDrawer::enableGrid( bool enable )
 {
     if( gridIsEnabled != enable )
@@ -114,6 +144,16 @@ void GridDrawer::setSize( const QSize& size )
     prevPoint = std::nullopt;
 
     this->refresh();
+}
+
+void GridDrawer::setRandom( const QPoint& pos )
+{
+    /// Generate random color.
+    const uint generated = rndGenerator.generate() % 2;
+
+    /// Set pixel.
+    if( !image ) return;
+    image->setPixel( pos, generated );
 }
 
 std::optional< QPoint > GridDrawer::getClickPoint( const QPointF& pos ) const
@@ -165,6 +205,10 @@ void GridDrawer::paintEvent( QPaintEvent* /* event */ )
 
 void GridDrawer::mousePressEvent( QMouseEvent* event )
 {
+    /// Check if enabled.
+    if( !enabled ) return;
+
+    /// Draw something.
     auto currentPoint = getClickPoint( event->localPos() );
     if( image && currentPoint )
     {
@@ -185,6 +229,10 @@ void GridDrawer::mousePressEvent( QMouseEvent* event )
 
 void GridDrawer::mouseReleaseEvent( QMouseEvent* event )
 {
+    /// Check if enabled.
+    if( !enabled ) return;
+
+    /// Draw something.
     auto currentPoint = getClickPoint( event->pos() );
     if( image && currentPoint )
     {
@@ -206,6 +254,10 @@ void GridDrawer::mouseReleaseEvent( QMouseEvent* event )
 
 void GridDrawer::mouseMoveEvent( QMouseEvent* event )
 {
+    /// Check if enabled.
+    if( !enabled ) return;
+
+    /// Draw something.
     auto currentPoint = getClickPoint( event->pos() );
     if( image && currentPoint &&
         event->buttons() & ( Qt::MouseButton::LeftButton |

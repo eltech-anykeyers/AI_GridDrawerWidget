@@ -27,8 +27,11 @@ public:
     const QImage& getImage() const;
     std::shared_ptr< QImage > getImagePtr() const;
     bool isGridEnabled() const;
+    bool isEnabled() const;
 
 public slots:
+    void generate();
+    void setEnabled( bool enable );
     void enableGrid( bool enable );
     void refresh();
     void setMark( const QString& mark );

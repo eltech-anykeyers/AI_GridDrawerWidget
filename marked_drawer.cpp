@@ -73,6 +73,21 @@ bool MarkedDrawer::isGridEnabled() const
     return gridDrawer->isGridEnabled();
 }
 
+bool MarkedDrawer::isEnabled() const
+{
+    return gridDrawer->isEnabled();
+}
+
+void MarkedDrawer::generate()
+{
+    gridDrawer->generate();
+}
+
+void MarkedDrawer::setEnabled( bool enable )
+{
+    gridDrawer->setEnabled( enable );
+}
+
 void MarkedDrawer::enableGrid( bool enable )
 {
     gridDrawer->enableGrid( enable );

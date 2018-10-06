@@ -5,6 +5,7 @@
 #include <memory>
 
 #include <QWidget>
+#include <QRandomGenerator>
 
 class GridDrawer : public QWidget
 {
@@ -28,8 +29,11 @@ public:
     const QImage& getImage() const;
     std::shared_ptr< QImage > getImagePtr() const;
     bool isGridEnabled() const;
+    bool isEnabled() const;
 
 public slots:
+    void generate();
+    void setEnabled( bool enable );
     void enableGrid( bool enable );
     void refresh();
     void setMark( const QString& mark );
@@ -40,6 +44,7 @@ signals:
     void markIsChanged( const QString& newMark );
 
 protected:
+    void setRandom( const QPoint& pos );
     std::optional< QPoint > getClickPoint( const QPointF& pos ) const;
 
     virtual void paintEvent( QPaintEvent* event ) override;
@@ -51,10 +56,12 @@ protected:
 
 private:
     static const QSize cellMinimumSize;
+    static QRandomGenerator rndGenerator;
 
     QString mark;
     std::shared_ptr< QImage > image;
     std::optional< QPoint > prevPoint;
+    bool enabled;
     bool gridIsEnabled;
 };
 
