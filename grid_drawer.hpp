@@ -25,7 +25,6 @@ public:
 
     QString getMark() const;
     QSize getSize() const;
-    QVector< QColor > getPixelData() const;
     const QImage& getImage() const;
     std::shared_ptr< QImage > getImagePtr() const;
     bool isGridEnabled() const;
@@ -38,6 +37,7 @@ public slots:
     void refresh();
     void setMark( const QString& mark );
     void setSize( const QSize& size );
+    void setImage( const QImage& image );
 
 signals:
     void imageUpdated( const QImage& image );

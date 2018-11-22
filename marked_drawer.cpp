@@ -53,11 +53,6 @@ QSize MarkedDrawer::getSize() const
     return gridDrawer->getSize();
 }
 
-QVector< QColor > MarkedDrawer::getPixelData() const
-{
-    return gridDrawer->getPixelData();
-}
-
 const QImage& MarkedDrawer::getImage() const
 {
     return gridDrawer->getImage();
@@ -96,6 +91,7 @@ void MarkedDrawer::enableGrid( bool enable )
 void MarkedDrawer::refresh()
 {
     gridDrawer->refresh();
+    markLineEdit->clear();
 }
 
 void MarkedDrawer::setMark( const QString& mark )
@@ -107,4 +103,9 @@ void MarkedDrawer::setMark( const QString& mark )
 void MarkedDrawer::setSize( const QSize& size )
 {
     gridDrawer->setSize( size );
+}
+
+void MarkedDrawer::setImage( const QImage& image )
+{
+    gridDrawer->setImage( image );
 }

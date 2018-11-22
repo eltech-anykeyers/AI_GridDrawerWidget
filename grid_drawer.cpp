@@ -60,21 +60,6 @@ QSize GridDrawer::getSize() const
     return image->size();
 }
 
-QVector< QColor > GridDrawer::getPixelData() const
-{
-    if( !image ) return QVector< QColor >();
-
-    QVector< QColor > result;
-    for( int i = 0; i < image->width(); i++ )
-    {
-        for( int j = 0; j < image->height(); j++ )
-        {
-            result.append( image->pixelColor( i, j ) );
-        }
-    }
-    return result;
-}
-
 const QImage& GridDrawer::getImage() const
 {
     return *image;
@@ -144,6 +129,17 @@ void GridDrawer::setSize( const QSize& size )
     prevPoint = std::nullopt;
 
     this->refresh();
+}
+
+void GridDrawer::setImage( const QImage& image )
+{
+    if( image.size() != this->image->size() ) throw std::invalid_argument( "bad image size" );
+    if( image.format() != QImage::Format_Mono ) throw std::invalid_argument( "bad format" );
+
+    this->image = std::make_shared< QImage >( image );
+
+    this->repaint();
+    emit imageUpdated( *this->image );
 }
 
 void GridDrawer::setRandom( const QPoint& pos )
